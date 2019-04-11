@@ -25,3 +25,6 @@ Applies for both types of models.
 This is NOT the model that is suggested by Yunjey. It takes in inputs of the previous word/Start token. The CNN's outputs are fed in as a hidden state. (instead of cell state. oops.)<br>
 ## Image and caption
 This is the model suggested by Yunjey, taking in concatenated inputs of words and the image vector as inputs, and during testing, accepts only the image as input. 
+
+## Sample Captioning
+![alt text](sampleoutput.png)

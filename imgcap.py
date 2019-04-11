@@ -157,7 +157,7 @@ class ImageCaptioningApplication(tk.Frame):
 
 
 root = tk.Tk()
-root.title('VOC Demo')
+root.title('Image Captioner')
 root.geometry('1080x720')
 app = ImageCaptioningApplication(master=root)
 app.mainloop()
