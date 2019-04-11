@@ -1,4 +1,5 @@
 # Image Captioning Model.
+Remember to change the File directory in the various python files please.<br>
 Comes in two flavours. One model is the default one suggested by Yunjey at https://github.com/yunjey/pytorch-tutorial/tree/master/tutorials/03-advanced/image_captioning  the other model is one with edits in how the inputs are made.<br>
 Both Models consist of a VGG 19 with Batch Normalisation frozen, save for the linear layer at the bottom, stacked with embedding and the LSTM (of editable number of layers. See train.py) and one final linear layer that maps back to the total number of vocabulary it was trained with.<br>
 Currently adapted to working with MS COCO 2014 Image captioning dataset. It does NOT use COCO api, and works with raw coco data downloaded from the website.<br> 
