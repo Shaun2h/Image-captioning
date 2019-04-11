@@ -28,3 +28,5 @@ This is the model suggested by Yunjey, taking in concatenated inputs of words an
 
 ## Sample Captioning
 ![alt text](sampleoutput.png)
+![alt text](sampleoutput2.png)
+![alt text](sampleoutput3.png)
