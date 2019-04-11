@@ -69,19 +69,18 @@ class Complete(torch.nn.Module):
 
     def caption(self, image,
                 max_length):  # ensure image is indeed of a single batch only. i.e. [1, 3,255]!
-        # you get it
+        # fuckit you get it
         words = []
-        states = None  # because i just found out the thing  accepts none.
+        mixedwords = []
+        states = None  # because i just found out the thing fucking accepts none.
         out1 = self.resnet(image)  # process all images
         out2 = self.batch_norm(out1)
         #         print(out2.shape)
         for i in range(
-                max_length):  # maxlength is a hyper parameter here,
-            # since you don't know when it's optimal to cut...
+                max_length):  # maxlength is a hyper parameter here, since you don't know when it's optimal to cut...
             # better extra then nothing to look at at all though...
             out3, states = self.lstm(out2.unsqueeze(0),
-                                     states)  # amazing how you actually don't put in anything.
-            #  i don't get math
+                                     states)  # amazing how you actually don't put in anything. i don't get math
             out4 = self.last(out3)
             out4 = out4.squeeze(0)
             #             print(out4.shape) [1, vocabsize]
@@ -91,11 +90,13 @@ class Complete(torch.nn.Module):
             # greedy method. try cat?
             # value,indices
             #             else:
-            #                 sampled = int(torch.distributions.categorical.Categorical(torch.exp(out4.squeeze(0))).sample())
+            sampledz = int(torch.distributions.categorical.Categorical(
+                torch.exp(out4.squeeze(0))).sample())
             # catty
             words.append(sampled)
-            out2 = self.embed(sampled).squeeze(
-                1)  # and then you put this in as the next input. yes. the word.
+            mixedwords.append(sampledz)
+            #             out2 = self.embed(torch.tensor(sampled).unsqueeze(0).to(device)).squeeze(1) # and then you put this in as the next input. yes. the word.
+            out2 = self.embed(sampled).squeeze(1)
             # i don't get it either.
 
-        return words  # batch_size, max_seq_length here
+        return words, mixedwords  # batch_size, max_seq_length here

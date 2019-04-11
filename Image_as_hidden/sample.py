@@ -5,7 +5,7 @@ from PIL import Image
 from model import Complete
 import sys
 #############################################
-if len(sys.argv)!=3:
+if len(sys.argv) != 3:
     print("python sample.py <model> <image>")
     quit()
 image_arg = sys.argv[2]
@@ -30,10 +30,10 @@ test_transform = torchvision.transforms.Compose([
 model = Complete(embedding_size, len(list(vocab_word.keys())), num_hidden, num_layers)
 
 model = model.to(device)
-model.load_state_dict(torch.load(model_target))
+model.load_state_dict(torch.load(model_target, map_location=device))
+model.eval()
 
-
-image = test_transform(Image.open("sit.jpg"))
+image = test_transform(Image.open(image_arg))
 image = image.unsqueeze(0).to(device)
 trigger_input = vocab_word["<START>"]
 trigger_input = torch.tensor(trigger_input).to(device)

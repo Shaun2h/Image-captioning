@@ -23,7 +23,7 @@ vocab_word = json.load(open("word2id_map.json", "r"))
 vocab_id = json.load(open("id2wordmap.json", "r"))
 model = Complete(embedding_size, len(list(vocab_word.keys())), num_hidden, num_layers)
 model = model.to(device)
-model.load_state_dict(torch.load(model_target))
+model.load_state_dict(torch.load(model_target, map_location=device))
 #####################################################
 test_transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize(224),  # needs to be this size.

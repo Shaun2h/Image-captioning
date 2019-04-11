@@ -91,12 +91,11 @@ print("val length: " + str(val_length))
 
 
 if current_epoch != 0:
-    pass
-    # Val_loss = json.load(open(output_dir + "val_loss.json"))
+    Val_loss = json.load(open(output_dir + "val_loss.json"))
 
-    # Accuracies = json.load(open(output_dir + "val_accuracies.json"))
-    # Train_loss = json.load(open(output_dir + f"train_loss.json"))
-    # model.load_state_dict(torch.load(output_dir + f"Captioner_{current_epoch-1}.pt"))
+    Accuracies = json.load(open(output_dir + "val_accuracies.json"))
+    Train_loss = json.load(open(output_dir + f"train_loss.json"))
+    model.load_state_dict(torch.load(output_dir + f"Captioner_{current_epoch-1}.pt", map_location=device))
 
 
 for epoch_num in range(current_epoch, total_epochs):
