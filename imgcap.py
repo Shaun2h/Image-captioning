@@ -93,6 +93,8 @@ class ImageCaptioningApplication(tk.Frame):
         self.target_display['text'] = ''
         self.pred_display['text'] = ''
         self.img = Image.open(self.input_img_name)
+        
+        
         self.processing = test_transform(self.img.convert('RGB'))
         self.processing = self.processing.unsqueeze(0)
         selection = self.var.get()
@@ -126,7 +128,10 @@ class ImageCaptioningApplication(tk.Frame):
                 break
             if element != "<START>":
                 samplestring += '{} '.format(element)
-
+        baseheight = 500
+        wpercent = (baseheight/float(self.img.size[1]))
+        wsize = int((float(self.img.size[0])*float(wpercent)))
+        self.img = self.img.resize((wsize,baseheight), Image.ANTIALIAS)
         self.img = ImageTk.PhotoImage(self.img)
         self.img_display['image'] = self.img
 
