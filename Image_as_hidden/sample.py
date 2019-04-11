@@ -33,7 +33,7 @@ model = model.to(device)
 model.load_state_dict(torch.load(model_target, map_location=device))
 model.eval()
 
-image = test_transform(Image.open(image_arg))
+image = test_transform(Image.open(image_arg).convert('RGB'))
 image = image.unsqueeze(0).to(device)
 trigger_input = vocab_word["<START>"]
 trigger_input = torch.tensor(trigger_input).to(device)
