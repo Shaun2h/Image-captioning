@@ -85,16 +85,16 @@ class Complete(torch.nn.Module):
         return out5
 
     # https://discuss.pytorch.org/t/simple-working-example-how-to-use-packing-for-variable-length-sequence-inputs-for-rnn/2120
-
     def caption(self, trigger, image,
                 max_length):  # ensure image is indeed of a single batch only. i.e. [1, 3,255]!
         # fuckit you get it
         words = []
+        mixedwords = []
         out1 = self.resnet(image)  # process all images
         out2 = self.batch_norm(out1)
         # input to lstm needs to be [1,1,50]
         trigger = self.embed(trigger).unsqueeze(0).unsqueeze(0)
-        print(trigger.shape)
+        #         print(trigger.shape)
         hiddens = self.initHidden(1)
         #         out2 = out2.unsqueeze(0)
         holding_list = []
@@ -102,15 +102,13 @@ class Complete(torch.nn.Module):
             holding_list.append(out2)
         hiddens[0] = torch.stack(holding_list, dim=0)  # stack to make  images fed into network
         for i in range(
-                max_length):
-            # maxlength is a hyper parameter here, since you don't know when it's optimal to cut...
+                max_length):  # maxlength is a hyper parameter here, since you don't know when it's optimal to cut...
             # better extra then nothing to look at at all though...
             #             print(out2.shape)
             #             print(hiddens[0].shape)
             #             print(hiddens[1].shape)
-            out3, states = self.lstm(trigger,
-                                     hiddens)
-            # amazing how you actually don't put in anything. i don't get math
+            out3, hiddens = self.lstm(trigger,
+                                      hiddens)  # amazing how you actually don't put in anything. i don't get math
             out4 = self.last(out3)
             out4 = out4.squeeze(0)
             #             print(out4.shape) [1, vocabsize]
@@ -118,20 +116,21 @@ class Complete(torch.nn.Module):
             _, sampled = torch.max(out4,
                                    dim=1)  # look at dimension 1, since now it's just 1, vocab
             #             print(sampled.shape)
+            #             sampled = int(torch.distributions.categorical.Categorical(torch.exp(out4.squeeze(0))).sample())
             trigger = self.embed(sampled.unsqueeze(0).long())
             #             print(trigger.shape)
             # greedy method. try cat?
             # value,indices
             #             else:
-            #                 sampled = int(torch.distributions.categorical.Categorical(
-            #                                   torch.exp(out4.squeeze(0))).sample())
+            sampledz = int(
+                torch.distributions.categorical.Categorical(torch.exp(out4.squeeze(0))).sample())
             # catty
             words.append(sampled)
-            out2 = self.embed(sampled).squeeze(
-                1)  # and then you put this in as the next input. yes. the word.
-            # i don't get it either.
+            mixedwords.append(sampledz)
+        #             out2 = self.embed(sampled).squeeze(1) # and then you put this in as the next input. yes. the word.
+        # i don't get it either.
 
-        return words  # batch_size, max_seq_length here
+        return words, mixedwords  # batch_size, max_seq_length here
 
     def initHidden(self, batch_size):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
