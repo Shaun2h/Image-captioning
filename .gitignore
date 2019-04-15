@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 Image_as_hidden/output/*.pt
 Image_n_cap/output/*.pt
+Image_as_state/output/*.pt
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 # Compiled python modules.
