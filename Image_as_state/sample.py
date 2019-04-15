@@ -16,8 +16,8 @@ embedding_size = 50  # hyper parameters
 num_layers = 2
 num_hidden = 300
 
-vocab_word = json.load(open("binderword2id_map.json", "r"))
-vocab_id = json.load(open("binderid2wordmap.json", "r"))
+vocab_word = json.load(open("word2id_new.json", "r"))
+vocab_id = json.load(open("id2word_new.json", "r"))
 
 test_transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize(224),  # needs to be this size.
@@ -37,14 +37,9 @@ image = test_transform(Image.open(image_arg).convert('RGB'))
 image = image.unsqueeze(0).to(device)
 trigger_input = vocab_word["<START>"]
 trigger_input = torch.tensor(trigger_input).to(device)
-output, mixedoutput = model.caption(trigger_input, image, 30)
+output= model.caption(trigger_input, image, 30)
 caption = []
 print("Top values")
-for i in output:
-    caption.append(vocab_id[str(int(i))])
-print(caption)
-caption = []
-print("Categorical sampled")
-for i in mixedoutput:
+for i in output[0]:
     caption.append(vocab_id[str(int(i))])
 print(caption)
