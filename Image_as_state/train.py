@@ -59,8 +59,8 @@ val_data = extract_jsons(open(val_captions))
 train_data = extract_jsons(open(train_captions))
 print(val_data[0])  # tuple. ( image file name, caption)
 
-vocab_word = json.load(open("binderword2id_map.json", "r"))
-vocab_id = json.load(open("binderid2wordmap.json", "r"))
+vocab_word = json.load(open("word2id_new.json", "r"))
+vocab_id = json.load(open("id2word_new.json", "r"))
 # you enjoy right.
 
 
