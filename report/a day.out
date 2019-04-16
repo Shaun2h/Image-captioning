@@ -1,7 +1,11 @@
 \BOOKMARK [1][-]{section.1}{Dataset and Models}{}% 1
 \BOOKMARK [2][-]{subsection.1.1}{Yunjey's model}{section.1}% 2
 \BOOKMARK [2][-]{subsection.1.2}{Alternative model}{section.1}% 3
-\BOOKMARK [1][-]{section.2}{Hyper parameter choices}{}% 4
-\BOOKMARK [1][-]{section.3}{Word frequency analysis}{}% 5
-\BOOKMARK [1][-]{section.4}{Evaluation}{}% 6
-\BOOKMARK [1][-]{section.5}{Packages used}{}% 7
+\BOOKMARK [3][-]{subsubsection.1.2.1}{Version 1: Image as Hidden State}{subsection.1.2}% 4
+\BOOKMARK [3][-]{subsubsection.1.2.2}{Version 2: Image as Cell State}{subsection.1.2}% 5
+\BOOKMARK [1][-]{section.2}{Hyper parameter choices}{}% 6
+\BOOKMARK [1][-]{section.3}{Word frequency analysis}{}% 7
+\BOOKMARK [1][-]{section.4}{Evaluation}{}% 8
+\BOOKMARK [2][-]{subsection.4.1}{Image Used as Hidden State}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.2}{Image Used as Cell State}{section.4}% 10
+\BOOKMARK [1][-]{section.5}{Packages used}{}% 11

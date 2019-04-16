@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import json
 
-OUTPUTS_DIRECTORY = 'Image_n_cap/output/'
+OUTPUTS_DIRECTORY = 'Image_as_hidden/output/'
 
 with open(OUTPUTS_DIRECTORY+'train_loss.json', 'r') as f:
     train_loss = json.load(f)
