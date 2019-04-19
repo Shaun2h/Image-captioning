@@ -9,6 +9,7 @@ import torchvision.models as models
 from torchvision import transforms
 from Image_n_cap.model import Complete as Model1
 from Image_as_hidden.model import Complete as Model2
+from Image_as_state.model import Complete as Model3
 
 IMAGE_WITH_INPUT = 'Image_n_cap/output/Captioner_19.pt'
 IWI_I2W = json.load(open('Image_n_cap/id2wordmap.json','r'))
@@ -17,6 +18,10 @@ IWI_W2I = json.load(open('Image_n_cap/word2id_map.json','r'))
 IMAGE_AS_HIDDEN = 'Image_as_hidden/output/Captioner_20.pt'
 IAH_I2W = json.load(open('Image_as_hidden/binderid2wordmap.json','r'))
 IAH_W2I = json.load(open('Image_as_hidden/binderword2id_map.json','r'))
+
+IMAGE_AS_CELL = 'Image_as_state/output/Captioner_14.pt'
+IAC_I2W = json.load(open('Image_as_state/id2word_new.json', 'r'))
+IAC_W2I = json.load(open('Image_as_state/word2id_new.json', 'r'))
 
 test_transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize(224),  # needs to be this size.
@@ -32,12 +37,19 @@ class ImageCaptioningApplication(tk.Frame):
         self.master = master
         self.input_img_name = 'No image file selected yet'
         self.model_selected = 'Image with Input'
+        self.predicted = False
+
         self.model1 = Model1(50, len(list(IWI_W2I.keys())), 300, 2)
         self.model1.load_state_dict(torch.load(IMAGE_WITH_INPUT, map_location='cpu'))
         self.model1.eval()
+
         self.model2 = Model2(50, len(list(IAH_W2I.keys())), 300, 2)
         self.model2.load_state_dict(torch.load(IMAGE_AS_HIDDEN, map_location='cpu'))
         self.model2.eval()
+
+        self.model3 = Model3(50, len(list(IAC_W2I.keys())), 300, 2)
+        self.model3.load_state_dict(torch.load(IMAGE_AS_CELL, map_location='cpu'))
+        self.model3.eval()
         self.model_in_use = self.model1
         
         self.pack()
@@ -70,6 +82,12 @@ class ImageCaptioningApplication(tk.Frame):
         self.model_choice2['variable'] = self.var
         self.model_choice2['value'] = 2
         self.model_choice2.pack(side='right')
+        self.model_choice3 = tk.Radiobutton(self.frame2)
+        self.model_choice3['text'] = 'Image as Cell State'
+        self.model_choice3['command'] = self.select_model
+        self.model_choice3['variable'] = self.var
+        self.model_choice3['value'] = 3
+        self.model_choice3.pack(side='right')
         self.var.set(1)
         self.frame2.pack(side='top')
 
@@ -106,7 +124,7 @@ class ImageCaptioningApplication(tk.Frame):
             samplecaption = []
             for i in mixedoutput:
                 samplecaption.append(IWI_I2W[str(int(i))])
-        else:
+        elif selection == 2:
             trigger_input = IAH_W2I["<START>"]
             trigger_input = torch.tensor(trigger_input)
             output, mixedoutput = self.model_in_use.caption(trigger_input, self.processing, 30)
@@ -116,6 +134,14 @@ class ImageCaptioningApplication(tk.Frame):
             samplecaption = []
             for i in mixedoutput:
                 samplecaption.append(IAH_I2W[str(int(i))])
+        else:
+            trigger_input = IAC_W2I["<START>"]
+            trigger_input = torch.tensor(trigger_input)
+            output= self.model_in_use.caption(trigger_input, self.processing, 30)
+            topcaption = []
+            for i in output[0]:
+                topcaption.append(IAC_I2W[str(int(i))])
+            samplecaption = []
         topstring = ''
         samplestring = ''
         for element in topcaption:
@@ -137,6 +163,7 @@ class ImageCaptioningApplication(tk.Frame):
 
         self.target_display['text'] = 'Using Top Word Prediction: {}'.format(topstring)
         self.pred_display['text'] = 'Using Sampling Prediction: {}'.format(samplestring)
+        self.predicted = True
         return
 
     def select_model(self):
@@ -147,9 +174,67 @@ class ImageCaptioningApplication(tk.Frame):
         if selection == 1:
             self.model_selected = 'Image with Input'
             self.model_in_use = self.model1
-        else:
+        elif selection ==2:
             self.model_selected = 'Image as Hidden'
             self.model_in_use = self.model2
+        else:
+            self.model_selected = 'Image as Cell State'
+            self.model_in_use = self.model3
+        if self.predicted:
+            self.img = Image.open(self.img_name_display['text'])
+        
+        
+            self.processing = test_transform(self.img.convert('RGB'))
+            self.processing = self.processing.unsqueeze(0)
+            selection = self.var.get()
+            if selection == 1:
+                output, mixedoutput = self.model_in_use.caption(self.processing, 30)
+                topcaption = []
+                for i in output:
+                    topcaption.append(IWI_I2W[str(int(i))])
+                samplecaption = []
+                for i in mixedoutput:
+                    samplecaption.append(IWI_I2W[str(int(i))])
+            elif selection == 2:
+                trigger_input = IAH_W2I["<START>"]
+                trigger_input = torch.tensor(trigger_input)
+                output, mixedoutput = self.model_in_use.caption(trigger_input, self.processing, 30)
+                topcaption = []
+                for i in output:
+                    topcaption.append(IAH_I2W[str(int(i))])
+                samplecaption = []
+                for i in mixedoutput:
+                    samplecaption.append(IAH_I2W[str(int(i))])
+            else:
+                trigger_input = IAC_W2I["<START>"]
+                trigger_input = torch.tensor(trigger_input)
+                output= self.model_in_use.caption(trigger_input, self.processing, 30)
+                topcaption = []
+                for i in output[0]:
+                    topcaption.append(IAC_I2W[str(int(i))])
+                samplecaption = []
+            topstring = ''
+            samplestring = ''
+            for element in topcaption:
+                if element == '<STOP>':
+                    break
+                if element != "<START>":
+                    topstring += '{} '.format(element)
+            for element in samplecaption:
+                if element == '<STOP>':
+                    break
+                if element != "<START>":
+                    samplestring += '{} '.format(element)
+            baseheight = 500
+            wpercent = (baseheight/float(self.img.size[1]))
+            wsize = int((float(self.img.size[0])*float(wpercent)))
+            self.img = self.img.resize((wsize,baseheight), Image.ANTIALIAS)
+            self.img = ImageTk.PhotoImage(self.img)
+            self.img_display['image'] = self.img
+
+            self.target_display['text'] = 'Using Top Word Prediction: {}'.format(topstring)
+            self.pred_display['text'] = 'Using Sampling Prediction: {}'.format(samplestring)
+            self.predicted = True
         return
 
 
