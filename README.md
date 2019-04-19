@@ -11,6 +11,8 @@ Currently adapted to working with MS COCO 2014 Image captioning dataset. It does
 $ python -m pip install nltk
 $ python -m pip install torch
 $ python -m pip install torchvision
+$ python -m pip install pillow
+$ python -m pip install json
 ```
 
 
@@ -21,10 +23,12 @@ $ python sample.py <model> <image>
 ```
 Applies for both types of models.
 
-## Image as hidden 
-This is NOT the model that is suggested by Yunjey. It takes in inputs of the previous word/Start token. The CNN's outputs are fed in as a hidden state. (instead of cell state. oops.)<br>
-## Image and caption
+## Image and caption (Download Our Model: https://drive.google.com/open?id=1gxytqy5a2fbPFWHgY5Ox1bmRadvM63Px)
 This is the model suggested by Yunjey, taking in concatenated inputs of words and the image vector as inputs, and during testing, accepts only the image as input. 
+## Image as hidden (Download Our Model: https://drive.google.com/open?id=1Rm50nOxe4he9jF92bL82o3r5FYf6Gw4D)
+This is NOT the model that is suggested by Yunjey. It takes in inputs of the previous word/Start token. The CNN's outputs are fed in as a hidden state. (instead of cell state. oops.)<br>
+## Image as cell state (Download Our Model: https://drive.google.com/open?id=1vZiPAh1rYRSUpIiTcz3_nvZ3hsTmSv2S)
+This is similar to 'Image as hidden' The difference is instead of using the image as a hidden state, it is used as a cell state. (Sample captioning below does not show this model as it was added later)
 
 ## Sample Captioning
 ![alt text](sampleoutput.png)
